@@ -195,6 +195,12 @@ namespace SQLiteDiff
                 targetDataGrid.Items[rowIndex],
                 targetDataGrid.Columns[columnIndex]
             ));
+
+            // 選択セルの情報を表示
+            SelectedColumnLabel.Content = $"Column: {selectedCell.Column.Header.ToString()}";
+            SelectedCellValue1.Text = DataGridHelper.GetCellValue(sourceDataGrid.SelectedCells[0]);
+            SelectedCellValue2.Text = DataGridHelper.GetCellValue(targetDataGrid.SelectedCells[0]);
+
             _isSyncingSelect = false;
         }
 

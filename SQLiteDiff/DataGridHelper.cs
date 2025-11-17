@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Dynamic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -126,5 +128,32 @@ namespace SQLiteDiff
 
             return textColumn;
         }
+
+        public static string GetCellValue(DataGridCellInfo cellInfo)
+        {
+            var rowData = cellInfo.Item as Dictionary<string, CellData>;
+            if (rowData == null) return null;
+
+            if (cellInfo.Column is DataGridBoundColumn boundColumn &&
+                boundColumn.Binding is Binding binding)
+            {
+                // Binding.Path は "[列名].Value" の形
+                var path = binding.Path.Path;
+
+                // "[Name].Value" をパース
+                var match = System.Text.RegularExpressions.Regex.Match(path, @"\[(.+?)\]\.Value");
+                if (match.Success)
+                {
+                    var key = match.Groups[1].Value;
+                    if (rowData.TryGetValue(key, out var cell))
+                    {
+                        return cell.Value.ToString() ?? string.Empty;
+                    }
+                }
+            }
+
+            return string.Empty;
+        }
+
     }
 }

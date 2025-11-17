@@ -31,6 +31,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <!--#region ControlPanel-->
         <Grid x:Name="ControlPanel" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -84,12 +85,20 @@
                 Grid.ColumnSpan="3"
                 SelectionChanged="TableComboBox_SelectionChanged" />
         </Grid>
+        <!--#endregion-->
         <Border Grid.Row="1" Height="4" />
+        <!--#region DiffPanel-->
         <Grid x:Name="DiffPanel" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <!--#region Table-->
             <DataGrid
                 x:Name="DataGrid1"
                 Grid.Row="0"
@@ -116,6 +125,44 @@
                     </Style>
                 </DataGrid.CellStyle>
             </DataGrid>
+            <!--#endregion-->
+            <GridSplitter
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                Width="8"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Stretch" />
+            <!--#region SelectionCellPanel-->
+            <Grid
+                x:Name="SelectionCellPanel"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label
+                    Name="SelectedColumnLabel"
+                    Grid.Row="0"
+                    Content="" />
+                <TextBox
+                    Name="SelectedCellValue1"
+                    Grid.Row="1"
+                    IsReadOnly="True"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Auto" />
+                <TextBox
+                    Name="SelectedCellValue2"
+                    Grid.Row="2"
+                    IsReadOnly="True"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Auto" />
+            </Grid>
+            <!--#region-->
         </Grid>
+        <!--#endregion-->
     </Grid>
 </Window>
