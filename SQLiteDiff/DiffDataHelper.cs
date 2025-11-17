@@ -308,7 +308,9 @@ namespace SQLiteDiff
             // 両方に存在する場合、値を比較
             foreach (string column in row1.Keys)
             {
-                if (!row1[column].Value.Equals(row2[column].Value))
+                var cell1 = row1[column].Value?.ToString() ?? string.Empty;
+                var cell2 = row2[column].Value?.ToString() ?? string.Empty;
+                if (cell1 != cell2)
                 {
                     return RowStatus.Modified;
                 }
