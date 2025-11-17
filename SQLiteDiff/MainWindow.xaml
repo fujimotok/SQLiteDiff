@@ -10,6 +10,17 @@
     <Window.Resources>
         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
         <local:IndexToNumberConverter x:Key="IndexToNumberConverter"/>
+        <Style TargetType="DataGrid">
+            <Setter Property="RowHeaderWidth" Value="10"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionUnit" Value="Cell"/>
+            <Setter Property="ColumnWidth" Value="*"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="dgx:DataGridFilter.IsAutoFilterEnabled" Value="True"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -32,13 +43,6 @@
         <Label Content="Table:" Grid.Row="2" Grid.Column="0" />
         <ComboBox x:Name="TableComboBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="4,4,4,0" SelectionChanged="TableComboBox_SelectionChanged"/>
         <DataGrid x:Name="DataGrid1"  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="4,4,4,0"
-                  IsReadOnly="True" SelectionUnit="Cell" ColumnWidth="*"
-                  dgx:DataGridFilter.IsAutoFilterEnabled="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserSortColumns="False"
-                  CanUserResizeRows="False"
-                  AlternationCount="100000"
                   Loaded="DataGrid_Loaded"
                   LayoutUpdated="DataGrid_LayoutUpdated"
                   ColumnDisplayIndexChanged="DataGrid_ColumnDisplayIndexChanged"
@@ -48,21 +52,8 @@
                     <Setter Property="Background" Value="{Binding Value.BackgroundColor}" />
                 </Style>
             </DataGrid.CellStyle>
-            <DataGrid.RowHeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=AlternationIndex, Converter={StaticResource IndexToNumberConverter}}"/>
-                </DataTemplate>
-            </DataGrid.RowHeaderTemplate>
         </DataGrid>
-        <DataGrid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="4,4,4,4"
-                  x:Name="DataGrid2" IsReadOnly="True" SelectionUnit="Cell" ColumnWidth="*" 
-                  dgx:DataGridFilter.IsAutoFilterEnabled="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserSortColumns="False"
-                  CanUserResizeRows="False"
-                  CanUserResizeColumns="False"
-                  AlternationCount="100000"
+        <DataGrid x:Name="DataGrid2" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="4,4,4,4"
                   Loaded="DataGrid_Loaded"
                   LayoutUpdated="DataGrid_LayoutUpdated"
                   ColumnDisplayIndexChanged="DataGrid_ColumnDisplayIndexChanged"
@@ -72,11 +63,6 @@
                     <Setter Property="Background" Value="{Binding Value.BackgroundColor}" />
                 </Style>
             </DataGrid.CellStyle>
-            <DataGrid.RowHeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=AlternationIndex, Converter={StaticResource IndexToNumberConverter}}"/>
-                </DataTemplate>
-            </DataGrid.RowHeaderTemplate>
         </DataGrid>
     </Grid>
 </Window>
