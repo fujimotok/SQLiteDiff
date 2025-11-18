@@ -28,6 +28,25 @@ namespace SQLiteDiff
         }
 
         /// <summary>
+        /// 改行コードの可視化
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string VisualizeNewLine(string text)
+        {
+            const string RETURN_SYMBOL = "↵";
+            const string CARRIAGE_SYMBOL = "⇠";
+            const string LINEFEED_SYMBOL = "⇣";
+
+            return text.Replace("\r\n", $"{RETURN_SYMBOL}")
+                       .Replace("\r", $"{CARRIAGE_SYMBOL}")
+                       .Replace("\n", $"{LINEFEED_SYMBOL}")
+                       .Replace($"{RETURN_SYMBOL}", $"{RETURN_SYMBOL}\n")
+                       .Replace($"{CARRIAGE_SYMBOL}", $"{CARRIAGE_SYMBOL}\n")
+                       .Replace($"{LINEFEED_SYMBOL}", $"{LINEFEED_SYMBOL}\n");
+        }
+
+        /// <summary>
         /// データベースの差分をとり、DataGrid1,2に反映する
         /// </summary>
         /// <param name="dataTable1"></param>

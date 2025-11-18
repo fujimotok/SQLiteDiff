@@ -206,12 +206,14 @@ namespace SQLiteDiff
 
             // 選択セルの情報を表示
             SelectedColumnLabel.Content = $"{selectedCell.Column.Header.ToString()}";
-            SelectedCellValue1.Text = DataGridHelper.GetCellValue(DataGrid1.SelectedCells[0]);
-            SelectedCellValue2.Text = DataGridHelper.GetCellValue(DataGrid2.SelectedCells[0]);
-            SelectedCellDiffViewer.OldText = SelectedCellValue1.Text;
-            SelectedCellDiffViewer.NewText = SelectedCellValue2.Text;
-            SelectedCellDiffViewerSBS.OldText = SelectedCellValue1.Text;
-            SelectedCellDiffViewerSBS.NewText = SelectedCellValue2.Text;
+            var text1 = DiffDataHelper.VisualizeNewLine(DataGridHelper.GetCellValue(DataGrid1.SelectedCells[0]));
+            var text2 = DiffDataHelper.VisualizeNewLine(DataGridHelper.GetCellValue(DataGrid2.SelectedCells[0]));
+            SelectedCellValue1.Text = text1;
+            SelectedCellValue2.Text = text2;
+            SelectedCellDiffViewer.OldText = text1;
+            SelectedCellDiffViewer.NewText = text2;
+            SelectedCellDiffViewerSBS.OldText = text1;
+            SelectedCellDiffViewerSBS.NewText = text2;
 
             _isSyncingSelect = false;
         }
