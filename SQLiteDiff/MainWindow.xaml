@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dgx="clr-namespace:DataGridExtensions;assembly=DataGridExtensions"
+    xmlns:diff="clr-namespace:DiffPlex.Wpf.Controls;assembly=DiffPlex.Wpf"
     xmlns:local="clr-namespace:SQLiteDiff"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
@@ -26,142 +27,166 @@
         </Style>
     </Window.Resources>
     <Grid Margin="4">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <!--#region ControlPanel-->
-        <Grid x:Name="ControlPanel" Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="4" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="4" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
 
-            <Label
-                Grid.Row="0"
-                Grid.Column="0"
-                Content="Database 1 Path:" />
-            <TextBox
-                x:Name="Database1PathTextBox"
-                Grid.Row="0"
-                Grid.Column="2"
-                PreviewMouseDown="DatabasePathTextBox_PreviewMouseDown" />
-            <Border Grid.Row="1" Height="4" />
-            <Label
-                Grid.Row="2"
-                Grid.Column="0"
-                Content="Database 2 Path:" />
-            <TextBox
-                x:Name="Database2PathTextBox"
-                Grid.Row="2"
-                Grid.Column="2"
-                PreviewMouseDown="DatabasePathTextBox_PreviewMouseDown" />
-            <Border Grid.Row="3" Height="4" />
-            <Button
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Grid.Column="5"
-                Click="CompareButton_Click"
-                Content="Compare" />
-            <Label
-                Grid.Row="4"
-                Grid.Column="0"
-                Content="Table:" />
-            <ComboBox
-                x:Name="TableComboBox"
-                Grid.Row="5"
-                Grid.Column="2"
-                Grid.ColumnSpan="3"
-                SelectionChanged="TableComboBox_SelectionChanged" />
-        </Grid>
-        <!--#endregion-->
-        <Border Grid.Row="1" Height="4" />
-        <!--#region DiffPanel-->
-        <Grid x:Name="DiffPanel" Grid.Row="2">
+        <!--#region MainPanel-->
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <!--#region Table-->
-            <DataGrid
-                x:Name="DataGrid1"
-                Grid.Row="0"
-                ColumnDisplayIndexChanged="DataGrid_ColumnDisplayIndexChanged"
-                LayoutUpdated="DataGrid_LayoutUpdated"
-                Loaded="DataGrid_Loaded"
-                SelectedCellsChanged="DataGrid_SelectedCellsChanged">
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="{Binding Value.BackgroundColor}" />
-                    </Style>
-                </DataGrid.CellStyle>
-            </DataGrid>
-            <DataGrid
-                x:Name="DataGrid2"
-                Grid.Row="1"
-                ColumnDisplayIndexChanged="DataGrid_ColumnDisplayIndexChanged"
-                LayoutUpdated="DataGrid_LayoutUpdated"
-                Loaded="DataGrid_Loaded"
-                SelectedCellsChanged="DataGrid_SelectedCellsChanged">
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="{Binding Value.BackgroundColor}" />
-                    </Style>
-                </DataGrid.CellStyle>
-            </DataGrid>
-            <!--#endregion-->
-            <GridSplitter
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="1"
-                Width="8"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Stretch" />
-            <!--#region SelectionCellPanel-->
-            <Grid
-                x:Name="SelectionCellPanel"
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="2">
+
+            <!--#region ControlPanel-->
+            <Grid x:Name="ControlPanel" Grid.Row="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Content="Database 1 Path:" />
+                <TextBox
+                    x:Name="Database1PathTextBox"
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    PreviewMouseDown="DatabasePathTextBox_PreviewMouseDown" />
+                <Border Grid.Row="1" Height="4" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Content="Database 2 Path:" />
+                <TextBox
+                    x:Name="Database2PathTextBox"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    PreviewMouseDown="DatabasePathTextBox_PreviewMouseDown" />
+                <Border Grid.Row="3" Height="4" />
+                <Button
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="5"
+                    Click="CompareButton_Click"
+                    Content="Compare" />
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Content="Table:" />
+                <ComboBox
+                    x:Name="TableComboBox"
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="3"
+                    SelectionChanged="TableComboBox_SelectionChanged" />
+            </Grid>
+            <!--#endregion-->
+
+            <Border Grid.Row="1" Height="4" />
+
+            <!--#region DiffPanel-->
+            <Grid x:Name="DiffPanel" Grid.Row="2">
+                <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Label
-                    Name="SelectedColumnLabel"
+                <!--#region Table-->
+                <DataGrid
+                    x:Name="DataGrid1"
                     Grid.Row="0"
-                    Content="" />
-                <TextBox
-                    Name="SelectedCellValue1"
+                    ColumnDisplayIndexChanged="DataGrid_ColumnDisplayIndexChanged"
+                    LayoutUpdated="DataGrid_LayoutUpdated"
+                    Loaded="DataGrid_Loaded"
+                    SelectedCellsChanged="DataGrid_SelectedCellsChanged">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="{Binding Value.BackgroundColor}" />
+                        </Style>
+                    </DataGrid.CellStyle>
+                </DataGrid>
+                <DataGrid
+                    x:Name="DataGrid2"
                     Grid.Row="1"
-                    IsReadOnly="True"
-                    TextWrapping="Wrap"
-                    VerticalScrollBarVisibility="Auto" />
-                <TextBox
-                    Name="SelectedCellValue2"
-                    Grid.Row="2"
-                    IsReadOnly="True"
-                    TextWrapping="Wrap"
-                    VerticalScrollBarVisibility="Auto" />
+                    ColumnDisplayIndexChanged="DataGrid_ColumnDisplayIndexChanged"
+                    LayoutUpdated="DataGrid_LayoutUpdated"
+                    Loaded="DataGrid_Loaded"
+                    SelectedCellsChanged="DataGrid_SelectedCellsChanged">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="{Binding Value.BackgroundColor}" />
+                        </Style>
+                    </DataGrid.CellStyle>
+                </DataGrid>
+                <!--#endregion-->
             </Grid>
-            <!--#region-->
+            <!--#endregion-->
+        </Grid>
+        <!--#endregion-->
+
+        <GridSplitter
+            Grid.Column="1"
+            Width="8"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch" />
+
+        <!--#region SelectionCellPanel-->
+        <Grid x:Name="SelectionCellPanel" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Content="[Selected Column]" />
+            <Label
+                Name="SelectedColumnLabel"
+                Grid.Row="1"
+                Content="" />
+            <Border Grid.Row="2" Height="16" />
+            <TabControl Grid.Row="3">
+                <TabItem Header="Raw">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBox
+                            Name="SelectedCellValue1"
+                            Grid.Row="0"
+                            IsReadOnly="True"
+                            TextWrapping="Wrap"
+                            VerticalScrollBarVisibility="Auto" />
+                        <TextBox
+                            Name="SelectedCellValue2"
+                            Grid.Row="1"
+                            IsReadOnly="True"
+                            TextWrapping="Wrap"
+                            VerticalScrollBarVisibility="Auto" />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="UDiff">
+                    <diff:DiffViewer Name="SelectedCellDiffViewer" IsSideBySide="False" />
+                </TabItem>
+                <TabItem Header="SideBySide">
+                    <diff:DiffViewer Name="SelectedCellDiffViewerSBS" IsSideBySide="True" />
+                </TabItem>
+            </TabControl>
         </Grid>
         <!--#endregion-->
     </Grid>

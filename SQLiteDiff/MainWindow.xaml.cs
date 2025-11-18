@@ -197,9 +197,13 @@ namespace SQLiteDiff
             ));
 
             // 選択セルの情報を表示
-            SelectedColumnLabel.Content = $"Column: {selectedCell.Column.Header.ToString()}";
+            SelectedColumnLabel.Content = $"{selectedCell.Column.Header.ToString()}";
             SelectedCellValue1.Text = DataGridHelper.GetCellValue(DataGrid1.SelectedCells[0]);
             SelectedCellValue2.Text = DataGridHelper.GetCellValue(DataGrid2.SelectedCells[0]);
+            SelectedCellDiffViewer.OldText = SelectedCellValue1.Text;
+            SelectedCellDiffViewer.NewText = SelectedCellValue2.Text;
+            SelectedCellDiffViewerSBS.OldText = SelectedCellValue1.Text;
+            SelectedCellDiffViewerSBS.NewText = SelectedCellValue2.Text;
 
             _isSyncingSelect = false;
         }
