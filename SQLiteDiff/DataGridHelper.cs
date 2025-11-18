@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DataGridExtensions.Wrappers;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Windows;
 using System.Windows.Controls;
@@ -118,12 +119,25 @@ namespace SQLiteDiff
         /// <returns></returns>
         public static DataGridTextColumn CreateDataGridTextColumn(string header, string columnName, DataGridLength width)
         {
+            // テキストを1行のみにして、上下のスクロール量をそろえる対応
+            Style textStyle = new Style(typeof(TextBlock));
+            textStyle.Setters.Add(new Setter(TextBlock.TextWrappingProperty, TextWrapping.NoWrap));
+            textStyle.Setters.Add(new Setter(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis));
+
+            // HACK: MaxHeigh=LineHeightにして1行に限定を実現。LineHeight取得のためにダミーでTextBlockを生成してサイズ取得
+            var dummy = new TextBlock(){ Text=" " };
+            dummy.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            dummy.Arrange(new Rect(dummy.DesiredSize));
+            double defaultLineHeight = dummy.ActualHeight;
+            textStyle.Setters.Add(new Setter(TextBlock.MaxHeightProperty, defaultLineHeight));
+
             DataGridTextColumn textColumn = new DataGridTextColumn
             {
                 Header = header,
                 Binding = new Binding($"[{columnName}].Value"),
                 Width = width,
-                CellStyle = CreateCellStyle(columnName)
+                CellStyle = CreateCellStyle(columnName),
+                ElementStyle = textStyle
             };
 
             return textColumn;
@@ -147,7 +161,7 @@ namespace SQLiteDiff
                     var key = match.Groups[1].Value;
                     if (rowData.TryGetValue(key, out var cell))
                     {
-                        return cell.Value.ToString() ?? string.Empty;
+                        return cell.Value?.ToString() ?? string.Empty;
                     }
                 }
             }
