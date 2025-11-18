@@ -117,6 +117,14 @@ namespace SQLiteDiff
 
             // 主キー名を取得し、結合した主キーのリストを取得
             string primaryKeyColumnName = _tableAndPKList.Find(x => x.tableName == selectedTable).primaryKeyName;
+
+            if (primaryKeyColumnName == null)
+            {
+                DataGrid1.ItemsSource = null;
+                DataGrid2.ItemsSource = null;
+                MessageBox.Show("No primary key");
+                return;
+            }
             
             // データベースの差分をとり、DataGrid1,2に反映する
             DiffDataHelper.DiffProcess(dataTable1, dataTable2, primaryKeyColumnName, DataGrid1, DataGrid2);
