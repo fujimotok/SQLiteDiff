@@ -127,7 +127,7 @@ namespace SQLiteDiff
             }
             
             // データベースの差分をとり、DataGrid1,2に反映する
-            DiffDataHelper.DiffProcess(dataTable1, dataTable2, primaryKeyColumnName, DataGrid1, DataGrid2);
+            DiffDataHelper.DiffProcess(dataTable1, dataTable2, primaryKeyColumnName, DataGrid1, DataGrid2, LineRadio.IsChecked ?? false);
         }
 
         /// <summary>
@@ -317,6 +317,19 @@ namespace SQLiteDiff
             finally
             {
                 _isSyncingScroll = false;
+            }
+        }
+
+        /// <summary>
+        /// RadioButtonのCheckedイベントハンドラ
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (DataGrid1 != null && DataGrid2 != null)
+            {
+                TableComboBox_SelectionChanged(null, null);
             }
         }
     }

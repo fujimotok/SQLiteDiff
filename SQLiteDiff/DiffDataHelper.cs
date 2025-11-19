@@ -59,7 +59,8 @@ namespace SQLiteDiff
             DataTable dataTable2,
             string primaryKeyColumnName,
             System.Windows.Controls.DataGrid dataGrid1,
-            System.Windows.Controls.DataGrid dataGrid2)
+            System.Windows.Controls.DataGrid dataGrid2,
+            bool isDiffContext1Line)
         {
             var dataList1 = ConvertDataTableToList(dataTable1);
             var dataList2 = ConvertDataTableToList(dataTable2);
@@ -73,6 +74,12 @@ namespace SQLiteDiff
 
             // 差分を集計して背景色を設定
             AnnotateDataList(dataList1, dataList2, primaryKeyColumnName);
+
+            if (isDiffContext1Line)
+            {
+                dataList1 = dataList1.Where(row => (string)(row[STATUS].Value) != "").ToList();
+                dataList2 = dataList2.Where(row => (string)(row[STATUS].Value) != "").ToList();
+            }
 
             // 画面に反映
             dataGrid1.ItemsSource = dataList1;
