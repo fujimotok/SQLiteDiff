@@ -17,7 +17,7 @@ namespace SQLiteDiff
         private const string NOSELECT = "<No Select>";
 
         private DatabaseHelper _dbHelper = new DatabaseHelper();
-        private List<(string tableName, string primaryKeyName)> _tableAndPKList;
+        private List<TableData> _tableDataList;
         private ScrollViewer _dataGridScrollViewer1;
         private ScrollViewer _dataGridScrollViewer2;
         private bool _isSyncingScroll;
@@ -30,7 +30,8 @@ namespace SQLiteDiff
         {
             // 初期化
             InitializeComponent();
-            TableComboBox.ItemsSource = new List<string>() { NOSELECT };
+
+            TableComboBox.ItemsSource = new List<TableData>() { new TableData(NOSELECT, "") };
             TableComboBox.SelectedIndex = 0;
 
             // 起動引数を取得し、データベースパスをセット
@@ -77,16 +78,15 @@ namespace SQLiteDiff
             List<(string tableName, string primaryKeyName)> tableList2 = _dbHelper.GetTableList(db2Path);
 
             // 未選択にさせるための項目を先頭に追加
-            _tableAndPKList = new List<(string tableName, string primaryKeyName)>() { (NOSELECT, "") };
-            foreach (var tableInfo in tableList1)
+            _tableDataList = new List<TableData>() { new TableData(NOSELECT, "") };
+            foreach (var tableData in tableList1)
             {
-                _tableAndPKList.Add(tableInfo); // テーブル名のみを追加
+                var hasDiff = _dbHelper.HasDifferences(db1Path, db2Path, tableData.tableName);
+                _tableDataList.Add(new TableData(tableData.tableName, tableData.primaryKeyName, hasDiff)); // テーブル名のみを追加
             }
 
-            var tableNames = new HashSet<string>(_tableAndPKList.ConvertAll(t => t.tableName));
-
             // テーブルリストをComboBoxに表示する
-            TableComboBox.ItemsSource = tableNames;
+            TableComboBox.ItemsSource = _tableDataList;
             TableComboBox.SelectedIndex = 0;
 
             MessageBox.Show($"Opening DBs success !");
@@ -101,7 +101,8 @@ namespace SQLiteDiff
         private void TableComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // 選択されたテーブル名を取得。Nullまたは未選択の場合は処理を終了
-            string selectedTable = TableComboBox.SelectedItem?.ToString();
+            var item = (TableData)TableComboBox.SelectedItem;
+            string selectedTable = item?.TableName ?? string.Empty;
             if (string.IsNullOrEmpty(selectedTable) || selectedTable == NOSELECT)
             {
                 DataGrid1.ItemsSource = null;
@@ -116,7 +117,7 @@ namespace SQLiteDiff
             DataTable dataTable2 = _dbHelper.LoadTableData(db2Path, selectedTable);
 
             // 主キー名を取得し、結合した主キーのリストを取得
-            string primaryKeyColumnName = _tableAndPKList.Find(x => x.tableName == selectedTable).primaryKeyName;
+            string primaryKeyColumnName = _tableDataList.Find(x => x.TableName == selectedTable).PrimaryKey;
 
             if (primaryKeyColumnName == null)
             {

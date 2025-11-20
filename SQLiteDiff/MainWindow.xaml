@@ -91,7 +91,19 @@
                     x:Name="TableComboBox"
                     Grid.Row="5"
                     Grid.Column="4"
-                    SelectionChanged="TableComboBox_SelectionChanged" />
+                    DisplayMemberPath="TableName"
+                    SelectionChanged="TableComboBox_SelectionChanged">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Background" Value="White" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasDifferences}" Value="True">
+                                    <Setter Property="Background" Value="Yellow" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
                 <GroupBox
                     Grid.Row="2"
                     Grid.RowSpan="3"
