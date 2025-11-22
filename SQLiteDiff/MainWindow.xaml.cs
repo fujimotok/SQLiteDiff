@@ -16,6 +16,9 @@ namespace SQLiteDiff
     {
         private const string NOSELECT = "<No Select>";
 
+        private string appName = System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private string appVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        private string appStateMessage = string.Empty;
         private DatabaseHelper _dbHelper = new DatabaseHelper();
         private List<TableData> _tableDataList;
         private ScrollViewer _dataGridScrollViewer1;
@@ -31,6 +34,7 @@ namespace SQLiteDiff
             // 初期化
             InitializeComponent();
 
+            SetAppStateMessage("Ready");
             TableComboBox.ItemsSource = new List<TableData>() { new TableData(NOSELECT, "") };
             TableComboBox.SelectedIndex = 0;
 
@@ -40,7 +44,18 @@ namespace SQLiteDiff
             {
                 Database1PathTextBox.Text = args[1];
                 Database2PathTextBox.Text = args[2];
+                CompareButton_Click(null, null);
             }
+        }
+
+        /// <summary>
+        /// アプリケーション状態メッセージを設定する
+        /// </summary>
+        /// <param name="message"></param>
+        private void SetAppStateMessage(string message)
+        {
+            appStateMessage = message;
+            Title = $"{appName}:{appVersion} - {appStateMessage}";
         }
 
         /// <summary>
@@ -89,7 +104,7 @@ namespace SQLiteDiff
             TableComboBox.ItemsSource = _tableDataList;
             TableComboBox.SelectedIndex = 0;
 
-            MessageBox.Show($"Opening DBs success !");
+            SetAppStateMessage("Opening DBs success !");
         }
 
         /// <summary>
