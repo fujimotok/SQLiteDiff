@@ -107,35 +107,43 @@ namespace SQLiteDiff
 
                 string sql = $"SELECT {string.Join(",", columns)} FROM {tableName} ORDER BY {string.Join(",", columns)}";
 
-                using (var cmdA = new SQLiteCommand(sql, connA))
-                using (var cmdB = new SQLiteCommand(sql, connB))
-                using (var readerA = cmdA.ExecuteReader())
-                using (var readerB = cmdB.ExecuteReader())
+                try
                 {
-                    while (true)
+                    using (var cmdA = new SQLiteCommand(sql, connA))
+                    using (var cmdB = new SQLiteCommand(sql, connB))
+                    using (var readerA = cmdA.ExecuteReader())
+                    using (var readerB = cmdB.ExecuteReader())
                     {
-                        bool hasNextA = readerA.Read();
-                        bool hasNextB = readerB.Read();
-
-                        if (hasNextA == false && hasNextB == false)
+                        while (true)
                         {
-                            return false; // 両方終わり → 完全一致
-                        }
-                        else if (hasNextA == false || hasNextB == false)
-                        {
-                            return true; // 片方だけ終わり → 差分検出
-                        }
+                            bool hasNextA = readerA.Read();
+                            bool hasNextB = readerB.Read();
 
-                        string rowA = string.Join("|", Enumerable.Range(0, readerA.FieldCount)
-                                                                 .Select(i => readerA.GetValue(i)?.ToString() ?? "NULL"));
-                        string rowB = string.Join("|", Enumerable.Range(0, readerB.FieldCount)
-                                                                 .Select(i => readerB.GetValue(i)?.ToString() ?? "NULL"));
+                            if (hasNextA == false && hasNextB == false)
+                            {
+                                return false; // 両方終わり → 完全一致
+                            }
+                            else if (hasNextA == false || hasNextB == false)
+                            {
+                                return true; // 片方だけ終わり → 差分検出
+                            }
 
-                        if (rowA != rowB)
-                        {
-                            return true; // 差分検出
+                            string rowA = string.Join("|", Enumerable.Range(0, readerA.FieldCount)
+                                                                     .Select(i => readerA.GetValue(i)?.ToString() ?? "NULL"));
+                            string rowB = string.Join("|", Enumerable.Range(0, readerB.FieldCount)
+                                                                     .Select(i => readerB.GetValue(i)?.ToString() ?? "NULL"));
+
+                            if (rowA != rowB)
+                            {
+                                return true; // 差分検出
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error comparing tables: {ex.Message}");
+                    return false; // エラー時は差分なしとみなす
                 }
             }
         }
